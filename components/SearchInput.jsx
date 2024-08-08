@@ -18,27 +18,22 @@ const SearchInput = ({
 }) => {
 	const [showPassword, setshowPassword] = useState(false);
 	return (
-		<View style={[styles.fieldContainer, otherStyles]}>
-			<Text style={styles.label}>{title}</Text>
-			<View style={styles.inputView}>
-				<TextInput
-					style={styles.textInput}
-					value={value}
-					placeholder={placeholder}
-					placeholderTextColor='#7b7b8b'
-					onChangeText={handleChangeText}
-					secureTextEntry={title === "Password" && !showPassword}
+		<View style={styles.inputView}>
+			<TextInput
+				style={styles.textInput}
+				value={value}
+				placeholder='Search for a video topic'
+				placeholderTextColor='#7b7b8b'
+				onChangeText={handleChangeText}
+				secureTextEntry={title === "Password" && !showPassword}
+			/>
+			<TouchableOpacity>
+				<Image
+					source={icons.search}
+					style={{ width: 24, height: 24 }}
+					resizeMode='contain'
 				/>
-				{title === "Password" && (
-					<TouchableOpacity onPress={() => setshowPassword(!showPassword)}>
-						<Image
-							source={!showPassword ? icons.eye : icons.eyeHide}
-							style={styles.eye}
-							resizeMode='contain'
-						/>
-					</TouchableOpacity>
-				)}
-			</View>
+			</TouchableOpacity>
 		</View>
 	);
 };
@@ -46,15 +41,6 @@ const SearchInput = ({
 export default SearchInput;
 
 const styles = StyleSheet.create({
-	fieldContainer: {
-		width: "100%",
-	},
-	label: {
-		fontSize: 16,
-		color: "white",
-		fontFamily: "Poppins-Medium",
-		marginBottom: 8,
-	},
 	inputView: {
 		borderWidth: 2,
 		borderColor: "black",
@@ -67,10 +53,11 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	textInput: {
-		flex: 1,
-		color: "white",
-		fontFamily: "Poppins-SemiBold",
 		fontSize: 16,
+		marginTop: 2,
+		color: "white",
+		flex: 1,
+		fontFamily: "Poppins-Regular",
 	},
 	eye: {
 		width: 24,

@@ -1,18 +1,35 @@
-import { FlatList, StyleSheet, Text, View, Image } from "react-native";
-import React from "react";
+import {
+	FlatList,
+	StyleSheet,
+	Text,
+	View,
+	Image,
+	RefreshControl,
+} from "react-native";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "../../constants";
 import SearchInput from "../../components/SearchInput";
+import Trending from "../../components/Trending";
+import EmptyState from "../../components/EmptyState";
+
 const Home = () => {
+	const [refreshing, setRefreshing] = useState(false);
+	const onRefresh = async () => {
+		setRefreshing(true);
+		// recall videos
+		setRefreshing(false);
+	};
+
 	return (
-		<SafeAreaView style={{ backgroundColor: "#161622" }}>
+		<SafeAreaView
+			style={{ backgroundColor: "#161622", flex: 1, borderColor: "red" }}>
 			<FlatList
-				data={[{ id: 1 }, { id: 2 }, { id: 3 }]}
-				keyExtractor={(item) => item.id.toString()} // Ensure the key is a string
+				// data={[{ id: 1 }, { id: 2 }, { id: 3 }]}
+				data={[]}
+				keyExtractor={(item) => item.id.toString()}
 				renderItem={({ item }) => (
-					<View>
-						<Text style={{ color: "white" }}>{item.id}</Text>
-					</View>
+					<Text style={{ color: "white" }}>{item.id}</Text>
 				)}
 				ListHeaderComponent={() => (
 					<View
@@ -55,8 +72,21 @@ const Home = () => {
 							</View>
 						</View>
 						<SearchInput />
+						<View style={styles.videos}>
+							<Text style={styles.videoText}>Latest Videos</Text>
+							<Trending posts={[{ id: 1 }, { id: 2 }, { id: 3 }]} />
+						</View>
 					</View>
 				)}
+				ListEmptyComponent={() => (
+					<EmptyState
+						title='No videos found'
+						subtitle='Be the first one to create a video'
+					/>
+				)}
+				refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+				}
 			/>
 		</SafeAreaView>
 	);
@@ -64,4 +94,17 @@ const Home = () => {
 
 export default Home;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	videos: {
+		width: "100%",
+		flex: 1,
+		paddingTop: 20,
+		paddingBottom: 32,
+	},
+	videoText: {
+		color: "white",
+		fontSize: 18,
+		fontFamily: "Poppins-Regular",
+		marginBottom: 12,
+	},
+});
