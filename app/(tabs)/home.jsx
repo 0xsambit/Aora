@@ -5,6 +5,7 @@ import {
 	View,
 	Image,
 	RefreshControl,
+	Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,17 +13,15 @@ import { images } from "../../constants";
 import SearchInput from "../../components/SearchInput";
 import Trending from "../../components/Trending";
 import EmptyState from "../../components/EmptyState";
-
+import { getAllPosts } from "../../lib/appwrite";
+import useAppwrite from "../../lib/useAppwrite";
+import VideoCard from "../../components/VideoCard";
 const Home = () => {
-	const [data, setData] = useState([]);
-	const [isLoading, setIsLoading] = useState(true);
-	useEffect(() => {
-		const fetchData = async () => {};
-	}, []);
+	const { data: posts, refetch } = useAppwrite(getAllPosts);
 	const [refreshing, setRefreshing] = useState(false);
 	const onRefresh = async () => {
 		setRefreshing(true);
-		// recall videos
+		await refetch();
 		setRefreshing(false);
 	};
 
@@ -30,12 +29,9 @@ const Home = () => {
 		<SafeAreaView
 			style={{ backgroundColor: "#161622", flex: 1, borderColor: "red" }}>
 			<FlatList
-				// data={[{ id: 1 }, { id: 2 }, { id: 3 }]}
-				data={[]}
-				keyExtractor={(item) => item.id.toString()}
-				renderItem={({ item }) => (
-					<Text style={{ color: "white" }}>{item.id}</Text>
-				)}
+				data={posts}
+				keyExtractor={(item) => item.$id}
+				renderItem={({ item }) => <VideoCard video={item} />}
 				ListHeaderComponent={() => (
 					<View
 						style={{
@@ -79,7 +75,7 @@ const Home = () => {
 						<SearchInput />
 						<View style={styles.videos}>
 							<Text style={styles.videoText}>Latest Videos</Text>
-							<Trending posts={[{ id: 1 }, { id: 2 }, { id: 3 }]} />
+							{/* <Trending posts={[{ id: 1 }, { id: 2 }, { id: 3 }]} /> */}
 						</View>
 					</View>
 				)}
