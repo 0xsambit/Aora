@@ -1,12 +1,13 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { icons } from "../constants";
 
 const VideoCard = ({
 	video: {
 		title,
 		thumbnail,
 		video,
-		creator: { avatar },
+		creator: { username, avatar },
 	},
 }) => {
 	return (
@@ -14,11 +15,40 @@ const VideoCard = ({
 			<View style={styles.viewContainer2}>
 				<View style={styles.viewContainer3}>
 					<View style={styles.viewContainer4}>
-						<Image source={{ uri: avatar }} />
+						<Image
+							source={{ uri: avatar }}
+							style={styles.image}
+							resizeMode='cover'
+						/>
+					</View>
+					<View style={styles.viewContainer5}>
+						<Text
+							style={{
+								color: "white",
+								fontFamily: "Poppins-SemiBold",
+								fontSize: 14,
+							}}
+							numberOfLines={1}>
+							{title}
+						</Text>
+						<Text
+							style={{
+								fontSize: 12,
+								color: "lightgray",
+								fontFamily: "Poppins-Regular",
+							}}>
+							{username}
+						</Text>
 					</View>
 				</View>
+				<View style={{ paddingTop: 4 }}>
+					<Image
+						source={icons.menu}
+						style={{ width: 20, height: 20 }}
+						resizeMode='contain'
+					/>
+				</View>
 			</View>
-			<Text style={{ fontSize: 20, color: "white" }}>{title}</Text>
 		</View>
 	);
 };
@@ -52,5 +82,16 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		padding: 2,
+	},
+	viewContainer5: {
+		justifyContent: "center",
+		flex: 1,
+		marginLeft: 12,
+		rowGap: 4,
+	},
+	image: {
+		width: "100%",
+		height: "100%",
+		borderRadius: 10,
 	},
 });
