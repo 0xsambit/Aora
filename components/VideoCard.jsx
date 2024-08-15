@@ -1,5 +1,5 @@
-import { Image, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
 import { icons } from "../constants";
 
 const VideoCard = ({
@@ -10,6 +10,7 @@ const VideoCard = ({
 		creator: { username, avatar },
 	},
 }) => {
+	const [play, setPlay] = useState(false);
 	return (
 		<View style={styles.viewContainer1}>
 			<View style={styles.viewContainer2}>
@@ -17,7 +18,7 @@ const VideoCard = ({
 					<View style={styles.viewContainer4}>
 						<Image
 							source={{ uri: avatar }}
-							style={styles.image}
+							style={styles.image1}
 							resizeMode='cover'
 						/>
 					</View>
@@ -49,6 +50,24 @@ const VideoCard = ({
 					/>
 				</View>
 			</View>
+			{play ? (
+				<Text style={{ color: "white" }}>Playing</Text>
+			) : (
+				<TouchableOpacity
+					style={styles.thumbnail}
+					activeOpacity={0.7}
+					onPress={() => setPlay(true)}>
+					<Image
+						source={{ uri: thumbnail }}
+						style={styles.image2}
+						resizeMode='cover'
+					/>
+					<Image
+						source={icons.play}
+						style={{ width: 48, height: 48, position: "absolute" }}
+					/>
+				</TouchableOpacity>
+			)}
 		</View>
 	);
 };
@@ -89,9 +108,24 @@ const styles = StyleSheet.create({
 		marginLeft: 12,
 		rowGap: 4,
 	},
-	image: {
+	image1: {
 		width: "100%",
 		height: "100%",
 		borderRadius: 10,
+	},
+	image2: {
+		width: "100%",
+		height: "100%",
+		borderRadius: 12,
+		marginTop: 12,
+	},
+	thumbnail: {
+		width: "100%",
+		height: 240,
+		borderRadius: 12,
+		marginTop: 12,
+		position: "relative",
+		justifyContent: "center",
+		alignItems: "center",
 	},
 });
