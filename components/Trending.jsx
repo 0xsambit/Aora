@@ -10,6 +10,7 @@ import {
 import React, { useState } from "react";
 import { icons } from "../constants";
 import * as Animatable from "react-native-animatable";
+import { Video, ResizeMode } from "expo-av";
 
 const zoomIn = {
 	0: {
@@ -17,12 +18,12 @@ const zoomIn = {
 	},
 
 	1: {
-		scale: 1,
+		scale: 1.1,
 	},
 };
 const zoomOut = {
 	0: {
-		scale: 1,
+		scale: 1.1,
 	},
 
 	1: {
@@ -32,13 +33,25 @@ const zoomOut = {
 
 const TrendingItem = ({ activeItem, item }) => {
 	const [play, setPlay] = useState(false);
+
 	return (
 		<Animatable.View
 			style={{ marginRight: 20 }}
 			animation={activeItem === item.$id ? zoomIn : zoomOut}
 			duration={500}>
 			{play ? (
-				<Text style={{ color: "white" }}>Playing</Text>
+				<Video
+					source={{ uri: item.video }}
+					style={styles.video}
+					resizeMode={ResizeMode.CONTAIN}
+					useNativeControls
+					shouldPlay
+					onPlaybackStatusUpdate={(status) => {
+						if (status.didJustFinish) {
+							setPlay(false);
+						}
+					}}
+				/>
 			) : (
 				<TouchableOpacity
 					style={{
@@ -53,14 +66,23 @@ const TrendingItem = ({ activeItem, item }) => {
 						style={styles.trending}
 						resizeMode='cover'
 					/>
-					<Image source={icons.play} />
+					<Image
+						source={icons.play}
+						style={{ width: 48, height: 48, position: "absolute" }}
+						resizeMode='contain'
+					/>
 				</TouchableOpacity>
 			)}
 		</Animatable.View>
 	);
 };
 const Trending = ({ posts }) => {
-	const [activeItem, setActiveItem] = useState(posts[0]);
+	const [activeItem, setActiveItem] = useState(posts[1]);
+	const viewableItemsChanged = ({ viewableItems }) => {
+		if (viewableItems.length > 0) {
+			setActiveItem(viewableItems[0].key);
+		}
+	};
 	return (
 		<FlatList
 			data={posts}
@@ -68,6 +90,11 @@ const Trending = ({ posts }) => {
 			renderItem={({ item }) => (
 				<TrendingItem activeItem={activeItem} item={item} />
 			)}
+			onViewableItemsChanged={viewableItemsChanged}
+			viewabilityConfig={{
+				itemVisiblePercentThreshold: 70,
+			}}
+			contentOffset={{ x: 170 }}
 			horizontal
 		/>
 	);
@@ -90,5 +117,12 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.25,
 		shadowRadius: 10,
 		elevation: 10,
+	},
+	video: {
+		width: 208,
+		height: 288,
+		borderRadius: 35,
+		marginTop: 12,
+		backgroundColor: "rgba(255, 255, 255, 0.1)",
 	},
 });
