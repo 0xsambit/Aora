@@ -24,7 +24,7 @@ const SearchInput = ({ initialQuery }) => {
 			/>
 			<TouchableOpacity
 				onPress={() => {
-					if (!query) {
+					if (query === "") {
 						return Alert.alert(
 							"Missing query",
 							"Please input something to search results across database"

@@ -1,17 +1,7 @@
-import {
-	FlatList,
-	StyleSheet,
-	Text,
-	View,
-	Image,
-	RefreshControl,
-	Alert,
-} from "react-native";
-import React, { useEffect, useState } from "react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
+import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { images } from "../../constants";
 import SearchInput from "../../components/SearchInput";
-import Trending from "../../components/Trending";
 import EmptyState from "../../components/EmptyState";
 import { searchPosts } from "../../lib/appwrite";
 import useAppwrite from "../../lib/useAppwrite";
@@ -19,6 +9,7 @@ import VideoCard from "../../components/VideoCard";
 import { useLocalSearchParams } from "expo-router";
 const Search = () => {
 	const query = useLocalSearchParams();
+	console.log(query);
 	const { data: posts, refetch } = useAppwrite(searchPosts(query));
 
 	useEffect(() => {
@@ -31,7 +22,15 @@ const Search = () => {
 			<FlatList
 				data={posts}
 				keyExtractor={(item) => item.$id}
-				renderItem={({ item }) => <VideoCard video={item} />}
+				renderItem={({ item }) => (
+					<VideoCard
+						title={item.title}
+						thumbnail={item.thumbnail}
+						video={item.video}
+						creator={item.creator.username}
+						avatar={item.creator.avatar}
+					/>
+				)}
 				ListHeaderComponent={() => (
 					<View
 						style={{
@@ -46,6 +45,7 @@ const Search = () => {
 							}}>
 							Search Results
 						</Text>
+
 						<Text
 							style={{
 								fontFamily: "Poppins-SemiBold",
@@ -54,13 +54,15 @@ const Search = () => {
 							}}>
 							{query}
 						</Text>
-						<SearchInput initialQuery={query} />
+						<View style={{ marginTop: 24, marginBottom: 32 }}>
+							<SearchInput initialQuery={query} refetch={refetch} />
+						</View>
 					</View>
 				)}
 				ListEmptyComponent={() => (
 					<EmptyState
 						title='No videos found'
-						subtitle='Be the first one to create a video'
+						subtitle='No videos found for this search query'
 					/>
 				)}
 			/>

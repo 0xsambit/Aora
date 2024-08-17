@@ -1,12 +1,26 @@
-import { View, Text } from "react-native";
-import React from "react";
+import { Text, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Bookmark = () => {
 	return (
-		<View>
-			<Text>Bookmark</Text>
-		</View>
+		<SafeAreaView style={styles.viewContainer}>
+			<Text style={styles.text}>Bookmark</Text>
+		</SafeAreaView>
 	);
 };
 
 export default Bookmark;
+
+const styles = StyleSheet.create({
+	viewContainer: {
+		paddingHorizontal: 16,
+		marginVertical: 24,
+		backgroundColor: "#161622",
+		height: "100%",
+	},
+	text: {
+		fontSize: 24,
+		color: "white",
+		fontFamily: "Poppins-SemiBold",
+	},
+});
